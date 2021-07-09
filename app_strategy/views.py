@@ -7,10 +7,10 @@ from .models import *
 def strategy(request):
     if request.method == "GET":
         strategy_list = StrategyInfo.objects.all().values()
-        print(strategy_list)
         return render(request,'strategy/strategy.html',{"strategy_list":strategy_list})
     else:
-
+        strategy_name = request.POST.get("strategy_name")
+        print(strategy_name)
         return HttpResponse('POST')
 
 
