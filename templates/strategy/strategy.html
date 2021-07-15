@@ -62,7 +62,7 @@
             <td>{{row.info}}</td>
             <td>{{row.type_id}}</td>
             <td>{{row.create_time}}</td>
-            <td>编辑 | 删除</td>
+            <td> <a>编辑</a> | <a>删除</a> | <a href="trade_page?strategy_id={{row.id}}">实盘选项</a></td>
         </tr>
         {% endfor %}
 
@@ -72,21 +72,29 @@
 
 <script>
 
-        $('#myModal').on('hidden.bs.modal', function() {
-            document.getElementById("modal_form").reset();
-        })
+        // $('#myModal').on('hidden.bs.modal', function() {
+        //     document.getElementById("modal_form").reset();
+        // })
 
-        function add_strategy(){
-            $.ajax({
-                url:"",
-                type:"POST",
-                data:{"strategy_name":$("#strategy_name").val()},
-                success:function(result){
-                    $("#btn_modal_close").click();
+        // function add_strategy(){
+        //     $.ajax({
+        //         url:"",
+        //         type:"POST",
+        //         data:{"strategy_name":$("#strategy_name").val()},
+        //         success:function(result){
+        //             $("#btn_modal_close").click();
 
-                }
-            });
-        }
+        //         }
+        //     });
+        // }
+
+    　　$(function(){
+            // $('#trade').click(function(){
+                
+            // });
+
+    　　});
+
 
 
 </script>

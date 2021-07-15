@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <form method="POST" enctype="multipart/form-data" action="/strategy/position_order/?strategy_id={{strategy_id}}">
+
+        <label>上传下一交易日目标仓位文件</label>
+        <br>
+        <input type="file" name="upload_file"/><br>
+        <textarea id="show_upload_file">
+            文件预览
+        </textarea>
+        <br>
+
+        <button type="submit" value="upload">上传</button>
+    </form>
+
+    <hr>
+    <div>
+        <p>请在下单当日下载列表！！！！！</p>
+        <a href="/strategy/position_order/?strategy_id={{strategy_id}}&day=0" download="order.csv">点击下载当日交易列表</a>
+    </div>
+
+
+    <script>
+
+    </script>
+</body>
+</html>

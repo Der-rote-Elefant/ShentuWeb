@@ -24,15 +24,9 @@ def position(request):
         return HttpResponse('POST')
 
 
-def position_upload(request):
-    if request.method == "GET":
-        strategy_list = StrategyInfo.objects.all().values()
-        return render(request, 'strategy/position_upload.html', {"strategy_list": strategy_list})
-    else:
-        strategy_id = request.POST.get('strategy_id')
-        file = request.FILES.get('upload_file',None)
-        # with open(r'C:\Users\Administrator.DESKTOP-E3H20V7\Desktop\test.txt', 'wb+') as destination:
-        #     for chunk in file.chunks():
-        #         destination.write(chunk)
 
-        return HttpResponse(strategy_id)
+
+def strategy_trade_option(request):
+    if request.method == "GET":
+        strategy_id = request.GET.get('strategy_id')
+        return render(request, 'strategy/strategy_trade_option.html', {"strategy_id": strategy_id})
