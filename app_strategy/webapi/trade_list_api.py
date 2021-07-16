@@ -19,7 +19,7 @@ def trade_position_list(request):
     else:
         strategy_id = request.GET.get('strategy_id')
         file = request.FILES.get('upload_file', None)
-        df = pd.read_csv(file,encoding="gbk")
+        df = pd.read_csv(file,encoding="gb2312")
 
         date = file.name.split('.')[0].split('_')[1]
         StrategyTradePositionList.objects.filter(create_date=date,strategy_id=strategy_id).delete()
@@ -38,6 +38,8 @@ def trade_position_list(request):
 
 def generate_order(target_position,hold_position):
     orders = []
+    long = Direction.LONG.value
+    short = Direction.SHORT.value
     for hp in hold_position:
         order = {}
         shold_close = True
@@ -45,21 +47,21 @@ def generate_order(target_position,hold_position):
         for tp in target_position:
             if tp['code'] == hp['code'] and tp['direction'] == hp['direction'] :
                 diff = tp['position'] - hp['position']
-                order['code'] = tp['code']
-                order['offset'] = Offset.OPEN if diff>0 else Offset.CLOSE
+                order['合约id'] = tp['code']
+                order['开平（开仓；平仓；平今；平昨）'] = Offset.OPEN if diff>=0 else Offset.CLOSE
 
-                if order['offset'] == Offset.OPEN:
-                    if tp['direction'] == Direction.LONG:
-                        order['direction'] = Direction.LONG
+                if order['开平（开仓；平仓；平今；平昨）'] == Offset.OPEN:
+                    if tp['direction'] == long:
+                        order['买卖（买；卖）'] = long
                     else:
-                        order['direction'] = Direction.SHORT
+                        order['买卖（买；卖）'] = short
                 else:
-                    if tp['direction'] == Direction.LONG:
-                        order['direction'] = Direction.SHORT
+                    if tp['direction'] == long:
+                        order['买卖（买；卖）'] = short
                     else:
-                        order['direction'] = Direction.LONG
+                        order['买卖（买；卖）'] = long
 
-                order['vol'] = abs(diff)
+                order['数量'] = abs(diff)
                 if diff != 0:
                     orders.append(order)
                 shold_close = False
@@ -67,10 +69,10 @@ def generate_order(target_position,hold_position):
 
         # 平老仓位
         if shold_close:
-            order['code'] = hp['code']
-            order['offset'] = Offset.CLOSE
-            order['direction'] = Direction.LONG if hp['direction'] == Direction.SHORT else Direction.SHORT
-            order['vol'] = hp['position']
+            order['合约id'] = hp['code']
+            order['开平（开仓；平仓；平今；平昨）'] = Offset.CLOSE
+            order['买卖（买；卖）'] = long if hp['direction'] == short else long
+            order['数量'] = hp['position']
             orders.append(order)
 
     for tp in target_position:
@@ -84,33 +86,37 @@ def generate_order(target_position,hold_position):
         #开新仓位
         if shold_open:
             order = {}
-            order['code'] = tp['code']
-            order['offset'] = Offset.OPEN
-            order['direction'] = Direction.SHORT if tp['direction'] == Direction.SHORT else Direction.LONG
-            order['vol'] = tp['position']
+            order['合约id'] = tp['code']
+            order['开平（开仓；平仓；平今；平昨）'] = Offset.OPEN
+            order['买卖（买；卖）'] = short if tp['direction'] == short else long
+            order['数量'] = tp['position']
             orders.append(order)
 
     for order in orders:
-        order['cs'] = "本地"
-        order['date'] = datetime.date.today().strftime('%Y.%m.%d')
-        order['time'] = '9:00'
-        order['condition'] = '否'
-        order['p1'] = ''
-        order['p2'] = ''
-        order['p3'] = ''
-        order['price'] = '对手价'
-        order['p4'] = ''
-        order['p5'] = ''
-        order['p6'] = ''
-        order['bidden'] = '是'
-        order['type'] = '投机'
-        order['direction'] = "买" if order['direction']==Direction.LONG else "卖"
-        order['offset'] = "开仓" if order['offset'] == Offset.OPEN else "平仓"
+        order['C\S（本地；云端）'] = "本地"
+        order['触发日期（年月日；例如：2019.3.15）'] = datetime.date.today().strftime('%Y.%m.%d')
+        order['触发时间（时分秒；例如：13:25）'] = '9:00'
+        order['附加条件（是；否）'] = '否'
+        order['触发价类型（附加条件）（最新价；买一价；卖一价）'] = ''
+        order['触发价方向（附加条件）（向上突破；向下跌破；大于等于；小于等于；大于；小于）'] = ''
+        order['触发线（附加条件）'] = ''
+        order['委托价（最新价；对手价；市价；自定义）'] = '对手价'
+        order['超价'] = ''
+        order['自定义委托价'] = ''
+        order['追单（是；否）'] = '是'
+        order['投保（投机；套保）'] = '投机'
+        order['买卖（买；卖）'] = "买" if order['买卖（买；卖）']==long else "卖"
+        order['开平（开仓；平仓；平今；平昨）'] = "开仓" if order['开平（开仓；平仓；平今；平昨）'] == Offset.OPEN else "平仓"
 
     order_context = HttpResponse(content_type='text/csv')  # 告诉浏览器是text/csv格式
     order_context['Content-Disposition'] = 'attachment; filename="somefilename.csv"'  # csv文件名，不影响
     writer = csv.writer(order_context)
-    columns = ['code', 'cs','date','time','condition','p1','p2','p3','direction','offset','price','p4','p5','p6','vol','bidden','type']
+
+    columns = ["合约id","C\S（本地；云端）","触发日期（年月日；例如：2019.3.15）","触发时间（时分秒；例如：13:25）","附加条件（是；否）","触发价类型（附加条件）（最新价；买一价；卖一价）",
+     "触发价方向（附加条件）（向上突破；向下跌破；大于等于；小于等于；大于；小于）","触发线（附加条件）","买卖（买；卖）","开平（开仓；平仓；平今；平昨）","委托价（最新价；对手价；市价；自定义）","超价","自定义委托价",
+               "数量","追单（是；否）","投保（投机；套保）"]
+
+
     writer.writerow(columns)
     for order in orders:
         writer.writerow([order[column] for column in columns])
