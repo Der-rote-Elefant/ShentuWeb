@@ -29,4 +29,7 @@ def position(request):
 def strategy_trade_option(request):
     if request.method == "GET":
         strategy_id = request.GET.get('strategy_id')
-        return render(request, 'strategy/strategy_trade_option.html', {"strategy_id": strategy_id})
+        #strategy_name = request.GET.get('strategy_name')
+        strategy = StrategyInfo.objects.get(id=strategy_id)
+        strategy_name = strategy.name
+        return render(request, 'strategy/strategy_trade_option.html', {"strategy_id": strategy_id,"strategy_name":strategy_name})

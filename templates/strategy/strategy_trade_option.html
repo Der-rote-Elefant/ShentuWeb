@@ -21,12 +21,16 @@
     <hr>
     <div>
         <p>请在下单当日下载列表！！！！！</p>
-        <a href="/strategy/position_order/?strategy_id={{strategy_id}}&day=0" download="order.csv">点击下载当日交易列表</a>
+        <a id="download" href="/strategy/position_order/?strategy_id={{strategy_id}}&day=0" download="{{strategy_name}}.csv">点击下载当日交易列表</a>
     </div>
 
-
+    <script src="/static/js/jquery-3.6.0.min.js"></script>
     <script>
-
+        $(function(){
+            var date = new Date;
+            var file_name = date.getFullYear()+'-' +date.getMonth()+'-'+date.getDate()+'_'+$("#download").attr("download");
+            $("#download").attr("download",file_name);
+        });
     </script>
 </body>
 </html>

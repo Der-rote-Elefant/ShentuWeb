@@ -71,7 +71,7 @@ def generate_order(target_position,hold_position):
         if shold_close:
             order['合约id'] = hp['code']
             order['开平（开仓；平仓；平今；平昨）'] = Offset.CLOSE
-            order['买卖（买；卖）'] = long if hp['direction'] == short else long
+            order['买卖（买；卖）'] = long if hp['direction'] == short else short
             order['数量'] = hp['position']
             orders.append(order)
 
