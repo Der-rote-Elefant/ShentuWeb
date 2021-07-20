@@ -28,7 +28,8 @@
     <script>
         $(function(){
             var date = new Date;
-            var file_name = date.getFullYear()+'-' +date.getMonth()+'-'+date.getDate()+'_'+$("#download").attr("download");
+            var month = date.getMonth()+1
+            var file_name = date.getFullYear()+'-' +month+'-'+date.getDate()+'_'+$("#download").attr("download");
             $("#download").attr("download",file_name);
         });
     </script>

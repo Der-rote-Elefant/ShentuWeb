@@ -108,8 +108,9 @@ def generate_order(target_position,hold_position):
         order['买卖（买；卖）'] = "买" if order['买卖（买；卖）']==long else "卖"
         order['开平（开仓；平仓；平今；平昨）'] = "开仓" if order['开平（开仓；平仓；平今；平昨）'] == Offset.OPEN else "平仓"
 
-    order_context = HttpResponse(content_type='text/csv')  # 告诉浏览器是text/csv格式
+    order_context = HttpResponse(content_type='text/csv',charset='gb2312')  # 告诉浏览器是text/csv格式
     order_context['Content-Disposition'] = 'attachment; filename="somefilename.csv"'  # csv文件名，不影响
+
     writer = csv.writer(order_context)
 
     columns = ["合约id","C\S（本地；云端）","触发日期（年月日；例如：2019.3.15）","触发时间（时分秒；例如：13:25）","附加条件（是；否）","触发价类型（附加条件）（最新价；买一价；卖一价）",
