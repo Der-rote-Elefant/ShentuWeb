@@ -95,7 +95,7 @@ def generate_order(target_position,hold_position):
     for order in orders:
         order['C\S（本地；云端）'] = "本地"
         order['触发日期（年月日；例如：2019.3.15）'] = datetime.date.today().strftime('%Y.%m.%d')
-        order['触发时间（时分秒；例如：13:25）'] = '9:00'
+        order['触发时间（时分秒；例如：13:25）'] = '9:11:23'
         order['附加条件（是；否）'] = '否'
         order['触发价类型（附加条件）（最新价；买一价；卖一价）'] = ''
         order['触发价方向（附加条件）（向上突破；向下跌破；大于等于；小于等于；大于；小于）'] = ''
